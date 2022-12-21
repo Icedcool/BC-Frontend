@@ -1,11 +1,11 @@
 import Head from 'next/head'
-import Image from 'next/image'
+//import Image from 'next/image'
 import { Inter } from '@next/font/google'
-import styles from '../styles/Home.module.css'
+//import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
 
 function Profile() {
-  const [data, setData] = useState(null)
+  const [data, setData] = useState({transactions:[]})
   const [isLoading, setLoading] = useState(false)
 
   useEffect(() => {
