@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 type Data = {
   transactions: any[]
 }
+console.log(process.env.MYSQLPASSWORD)
 
 // var mysql      = require('mysql');
 // var connection = mysql.createConnection({
