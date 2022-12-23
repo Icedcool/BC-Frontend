@@ -45,7 +45,7 @@ connection.end();
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<RowDataPacket[]>
 ) {
   res.status(200).json(data)
 }
