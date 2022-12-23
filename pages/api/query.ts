@@ -31,7 +31,7 @@ export interface RowDataPacket {
     ProjectTeamPercent: any
 }
 
-let data: unknown;
+let data: RowDataPacket[] | null;
 connection.query('Select cs.id as sowID, c.ClientName, cs.AmtUSDC, cs.Currency, cs.Sponsor, cs.BudgetURL, cs.SOWURL, cs.StartDate, cs.EndDate, cs.Completed, cs.ClientID, cs.ProjectTeamPercent from Clients c left join ClientSOW cs on c.id = cs.ClientID ', function (error:unknown, results:RowDataPacket[]) {
   if (error) throw error;
   console.log(results[0] as RowDataPacket);
