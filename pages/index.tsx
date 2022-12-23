@@ -20,7 +20,7 @@ interface RowDataPacket{
 }
 
 function Profile() {
-  const [data, setData] = useState<RowDataPacket|null>(null)
+  const [data, setData] = useState<RowDataPacket[]>()
   const [isLoading, setLoading] = useState(false)
 
   useEffect(() => {
