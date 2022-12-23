@@ -3,19 +3,32 @@ import Head from 'next/head'
 import { Inter } from '@next/font/google'
 //import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
-interface Data {
-  transactions:{id:string}[]
+
+interface RowDataPacket{
+  sowID: number,
+  ClientName: string,
+  AmtUSDC: number,
+  Currency: string,
+  Sponsor: string,
+  BudgetURL: string,
+  SOWURL: string|null,
+  StartDate: any,
+  EndDate: any,
+  Completed: number,
+  ClientID: number,
+  ProjectTeamPercent: any
 }
 
 function Profile() {
-  const [data, setData] = useState<Data|null>(null)
+  const [data, setData] = useState<RowDataPacket|null>(null)
   const [isLoading, setLoading] = useState(false)
 
   useEffect(() => {
     setLoading(true)
     fetch('/api/query')
-      .then((res) => res.json())
+      .then((res) => {console.log(res);return res.text()})
       .then((data) => {
+        // console.log(data)
         setData(data)
         setLoading(false)
       })
@@ -25,9 +38,10 @@ function Profile() {
   if (!data) return <p>No profile data</p>
 
 
+
   return (
     <div>
-      {data.transactions.map((tx) => <div>{tx.id}</div>)}
+      {JSON.parse(data).map((client:RowDataPacket) => <div>{client.ClientName}</div>)}
     </div>
   )
 }
