@@ -1,20 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
+import mysql from 'mysql2/promise';
 
 type Data = {
   transactions: any[]
 }
-console.log(process.env.MYSQLPASSWORD)
-
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-  host     : 'bc1.c6g7dlo9dbal.us-east-1.rds.amazonaws.com',
-  user     : 'tableau',
-  password : process.env.MYSQLPASSWORD,
-  database : 'finance'
-});
-
-connection.connect();
 
 export interface RowDataPacket {
     sowID: number,
@@ -31,21 +21,31 @@ export interface RowDataPacket {
     ProjectTeamPercent: any
 }
 
-let data: RowDataPacket[];
-connection.query('Select cs.id as sowID, c.ClientName, cs.AmtUSDC, cs.Currency, cs.Sponsor, cs.BudgetURL, cs.SOWURL, cs.StartDate, cs.EndDate, cs.Completed, cs.ClientID, cs.ProjectTeamPercent from Clients c left join ClientSOW cs on c.id = cs.ClientID ', function (error:unknown, results:RowDataPacket[]) {
-  if (error) throw error;
-  console.log(results[0] as RowDataPacket);
-  data = results as RowDataPacket[]
-});
+async function fetchRows() {
+  try {
+    const connection = await mysql.createConnection({
+      host     : 'bc1.c6g7dlo9dbal.us-east-1.rds.amazonaws.com',
+      user     : 'tableau',
+      password : process.env.MYSQLPASSWORD,
+      database : 'finance'
+    });
+    const [ rows ] = await connection.query('Select cs.id as sowID, c.ClientName, cs.AmtUSDC, cs.Currency, cs.Sponsor, cs.BudgetURL, cs.SOWURL, cs.StartDate, cs.EndDate, cs.Completed, cs.ClientID, cs.ProjectTeamPercent from Clients c left join ClientSOW cs on c.id = cs.ClientID ');
+    connection.end();
+    return rows;
+  } catch (err: unknown) {
+    console.error('Error: ', err);
+  } 
+}
 
-connection.end();
-
-
-
-
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<RowDataPacket[]>
+  res: NextApiResponse
 ) {
-  res.status(200).json(data)
+  try {
+    const data = await fetchRows();
+    console.log(data);
+    res.status(200).json(data)
+  } catch (err: unknown) {
+    res.status(400).json({ message: err })
+  }
 }
