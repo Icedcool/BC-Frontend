@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { Inter } from '@next/font/google'
 //import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
-import fake from "../data/fake.json"
+// import fake from "../data/fake.json"
 
 interface RowDataPacket{
   sowID: number,
